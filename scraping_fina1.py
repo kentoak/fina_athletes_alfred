@@ -53,15 +53,25 @@ async def main(spell):
             if not poolLength:
                 continue
             pooldict={"25m":"SCM","50m":"LCM"}
+            time=time.replace("==","=").lstrip('0')
+            event=event.replace("Women","").replace("Men","")
+
             # tao = {
             #         'title': name+"    "+pooldict[poolLength]+" "+event.replace("Women","").replace("Men","")+" "+time,
             #         'subtitle': "@"+competition+", age:"+age+", date:"+date,
             #         'arg': ""
             #     }
-            tao = {
-                    'title': pooldict[poolLength]+" "+event.replace("Women","").replace("Men","")+" "+time,
-                    'subtitle': name+" @"+competition+", age:"+age+", date:"+date,
-                    'arg': pooldict[poolLength]+" "+event.replace("Women","").replace("Men","")+" "+time+"\n"+name+" @"+competition+", age:"+age+", date:"+date
+            if event[:3]=="Mix":
+                tao = {
+                    'title': pooldict[poolLength]+" "+event+" "+time,
+                    'subtitle': name+":@"+competition+", age:"+age+", date:"+date,
+                    'arg': pooldict[poolLength]+" "+event+" "+time+"\n"+name+" @"+competition+", age:"+age+", date:"+date
+                }
+            else:
+                tao = {
+                    'title': pooldict[poolLength]+""+event+" "+time,
+                    'subtitle': name+":@"+competition+", age:"+age+", date:"+date,
+                    'arg': pooldict[poolLength]+" "+event+" "+time+"\n"+name+" @"+competition+", age:"+age+", date:"+date
                 }
             obj.append(tao)
     await browser.close()

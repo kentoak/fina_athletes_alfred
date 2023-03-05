@@ -60,6 +60,7 @@ async def main(spell):
                 if "href" in j.select_one(".athlete-table__cta-link").attrs:
                     link="https:"+j.select_one(".athlete-table__cta-link")["href"]
             #print(link)
+            name=name.replace("  "," ")
             #print(name,country,discipline,gender,birth)
             if discipline=="Swimming":
                 tao = {
