@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>bundleid</key>
-	<string></string>
+	<string>com.taoka.finacrawler</string>
 	<key>category</key>
 	<string>zisaku</string>
 	<key>connections</key>
@@ -113,7 +113,7 @@
 	<key>createdby</key>
 	<string>taoka</string>
 	<key>description</key>
-	<string>FINA {query}'s Personal Bests are...</string>
+	<string>Crawler for FINA {query}'s Personal Bests &amp; Results</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>

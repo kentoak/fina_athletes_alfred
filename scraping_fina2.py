@@ -7,6 +7,7 @@ import re
 import urllib.parse
 import asyncio
 from pyppeteer import launch
+#import pandas as pd
 
 async def main(spell):
     url = spell[0]
@@ -19,15 +20,20 @@ async def main(spell):
         page.goto(url),
         page.waitForNavigation(),
     ])
-    for i in range(1, 100):
-        await page.evaluate('window.scrollTo(0,'+ str(i * 1000) +')')
-    await page.waitForSelector('.js-results-table-body')
     obj = []
+    tmp=[]
+    await page.evaluate('window.scrollTo(0,'+ str(1000 * 10) +')')
+    await page.waitForSelector('.js-results-table-body')
     name=url.split("/")[-1].split("-")[0].capitalize()+" "+url.split("/")[-1].split("-")[1].capitalize()
     while True:
         try:
             show_more_button = await page.waitForSelector('.button.load-more-button.js-show-more-button')
+            if not show_more_button:
+                #print("kkk")
+                break
             await show_more_button.click()
+            if len(tmp)>500:
+                break
             k = await page.waitForSelector('.js-results-table-body')
             generated_element = await page.evaluate('(element) => element.innerHTML', k)
             content = await page.content()
@@ -52,13 +58,12 @@ async def main(spell):
                         #poolLength=j.select(".athlete-table__cell.u-text-center")[2].get_text().strip()
                         age=j.select(".athlete-table__cell.u-text-center")[3].get_text().strip()
                         date=j.select(".athlete-table__cell.u-text-center")[5].get_text().strip()
-                #print(event,time)
                 #print("age",age,"date",date)
-                #print(competition)
+                #print(event,time,competition)
+                tmp.append(event+" "+time+" "+competition)
                 #print("finapoint is ...",finapoint)
                 time=time.replace("==","=").lstrip('0')
                 event=event.replace("Women","").replace("Men","")
-                #print(name)
                 tao = {
                     'title': event+" "+time,
                     'subtitle': name+":@"+competition+", age:"+age+", date:"+date,
@@ -66,10 +71,21 @@ async def main(spell):
                 }
                 #print(tao)
                 obj.append(tao)
+            await page.evaluate('window.scrollTo(0,'+ str(1800 * 10) +')')
+            await page.waitForSelector('.js-results-table-body')
         except:
             break
+    # df=pd.Series(tmp)
+    # print(df.duplicated())
+    # print(df[df.duplicated()])
+    # print(df.duplicated().sum())
+    unique_obj = []
+    for d in obj:
+        if str(d) not in [str(x) for x in unique_obj]:
+            unique_obj.append(d)
+    #print(len(unique_obj))
     await browser.close()
-    jso = {'items': obj}
+    jso = {'items': unique_obj}
     sys.stdout.write(json.dumps(jso, ensure_ascii=False))
 
 if __name__ == "__main__":
