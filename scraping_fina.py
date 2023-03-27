@@ -10,7 +10,8 @@ from pyppeteer import launch
 #from requests_html import HTML
 
 async def main(spell):
-    url = "https://www.fina.org/athletes/?gender=&discipline=&nationality=&name=" + spell
+    #url = "https://www.fina.org/athletes/?gender=&discipline=&nationality=&name=" + spell
+    url = "https://www.worldaquatics.com/athletes/?gender=&discipline=&nationality=&name=" + spell
     browser = await launch()
     #browser = await launch(headless=False) #ブラウザを表示する
     page = await browser.newPage()
@@ -28,7 +29,16 @@ async def main(spell):
     
     #pyppeteer
     #target = await page.J('.js-athletes-table-body')
-    await page.waitForSelector('.js-athletes-table-body')
+    #await page.waitForSelector('.js-athletes-table-body')
+    try:
+        #await page.waitForSelector('.js-athletes-container')
+        await page.waitForSelector('.js-athletes-table-body')
+        #await page.waitForSelector('.filters__modal-button-label')
+    except:
+        print("waiting")
+
+    #page = await browser.newPage()
+    # ページ遷移して読み込みが終わるまで待つ
     target = await page.J('.js-athletes-table-body')
     #title = await page.evaluate('(target) => target.textContent',target)
     generated_element = await page.evaluate('(element) => element.innerHTML', target)
