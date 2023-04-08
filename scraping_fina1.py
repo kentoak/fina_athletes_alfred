@@ -25,6 +25,7 @@ async def main(spell):
     generated_element = await page.evaluate('(element) => element.innerHTML', target)
     soup=BeautifulSoup(generated_element, "html.parser")
     obj = []
+    objSCM,objLCM=[],[]
     name=url.split("/")[-1].split("-")[0].capitalize()+" "+url.split("/")[-1].split("-")[1].capitalize()
     if soup.select_one("tbody"):
         for j in soup.select("tr"):
@@ -73,7 +74,12 @@ async def main(spell):
                     'subtitle': name+":@"+competition+", age:"+age+", date:"+date,
                     'arg': pooldict[poolLength]+" "+event+" "+time+"\n"+name+" @"+competition+", age:"+age+", date:"+date
                 }
-            obj.append(tao)
+            if poolLength=="25m":
+                objSCM.append(tao)
+            elif poolLength=="50m":
+                objLCM.append(tao)
+
+    obj=objLCM+objSCM
     await browser.close()
     jso = {'items': obj}
     sys.stdout.write(json.dumps(jso, ensure_ascii=False))
